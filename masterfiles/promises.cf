@@ -6,32 +6,14 @@
 
 body common control
 {
- bundlesequence => { "main" };
+ bundlesequence => { "base" };
 
  inputs => { 
-            "cfengine_stdlib.cf", 
+            "cfengine_stdlib.cf",
+	    "base.cf"
            };
 
- version => "Community Promises.cf 1.0.0";
-}
-
-###############################################################################
-
-bundle agent main
-{
- reports:
-  am_policy_hub::
-   "--> I'm a policy hub."
-      comment => "Display message on screen/email",
-       handle => "main_reports_i_am_hub";
-
-  !am_policy_hub::
-   "--> $(sys.policy_hub) is my policy hub."
-      comment => "Display message on screen/email",
-       handle => "main_reports_is_my_hub";
-   "--> CFE is running on $(sys.fqhost)"
-      comment => "Display message on screen/email",
-       handle => "main_reports_cfe_running";
+ version => "OCEMR Promises.cf 1.0.0";
 }
 
 ###############################################################################
@@ -47,18 +29,15 @@ bundle common def
 
   # Begin change # Your domain name, for use in access control
 
-     "domain"  string => "example.com",
+     "domain"  string => "ocemr",
               comment => "Define a global domain for all hosts",
                handle => "common_def_vars_domain";
 
   # List here the IP masks that we grant access to on the server
 
     "acl" slist => { 
-                   "$(sys.policy_hub)/16"  # Assume /16 LAN clients to start with
-
-                 #  "2001:700:700:3.*", 
-                 #  "217.77.34.18", 
-                 #  "217.77.34.19",
+                    #"$(sys.policy_hub)/24",
+                    "192.168.13.1", 
                    },
        comment => "Define an acl for the machines to be granted accesses",
         handle => "common_def_vars_acl"; 
@@ -189,9 +168,9 @@ body executor control
 
 # Default:
 #
-# schedule => { "Min00", "Min05", "Min10", "Min15", "Min20", 
-#               "Min25", "Min30", "Min35", "Min40", "Min45",
-#               "Min50", "Min55" };
+schedule => { "Min00", "Min05", "Min10", "Min15", "Min20", 
+              "Min25", "Min30", "Min35", "Min40", "Min45",
+              "Min50", "Min55" };
 
 # The full path and command to the executable run by default (overriding builtin).
 # cf-twin needs its own safe environment because of the update mechanism

@@ -1,0 +1,29 @@
+bundle common base_config
+{
+ vars:
+	"net_dev" string => "eth0";
+	"net_addr" string => "192.168.1.1";
+	"net_mask" string => "255.255.255.0";
+}
+
+bundle agent base
+{
+methods:
+	debian::
+		"any" usebundle => debian_networking();
+}
+
+bundle agent debian_networking
+{
+methods:
+		"any" usebundle => insert_template(
+			"/etc/netmork/interfaces", "debian_interfaces" );
+			
+}
+
+bundle agent insert_template(dst, src)
+{
+files:
+		"$(dst)"
+			edit_template => "$(sys.workdir)/inputs/templates/$(src).dat";
+}

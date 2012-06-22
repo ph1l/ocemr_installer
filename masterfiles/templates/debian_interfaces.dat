@@ -1,0 +1,10 @@
+[%CFEngine BEGIN %]
+auto lo
+iface lo inet loopback
+
+iface $(base_config.net_dev) inet static
+	address	$(base_config.net_addr)
+	netmask $(base_config.net_mask)
+
+[%CFEngine END %]
+
