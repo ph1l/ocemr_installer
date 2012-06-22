@@ -8,7 +8,6 @@ cp -r /hd-media/repo /target/var/packages/
 
 echo "deb file:///var/packages/ repo/" >> /target/etc/apt/sources.list
 
-in-target aptitude update
-in-target aptitude install ocemr
-in-target aptitude install cfengine3
+in-target aptitude --quiet --assume-yes update
+in-target aptitude --quiet --assume-yes install cfengine3
 
