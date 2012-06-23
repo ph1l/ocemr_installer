@@ -1,0 +1,9 @@
+#!/bin/sh
+
+dpkg -i /var/packages/repo/cfengine3_3.3.3-2_i386.deb 
+
+( cd /var/cfengine/masterfiles; make check install )
+
+/usr/sbin/cf-agent -I
+
+mv /etc/rc.local.orig /etc/rc.local
