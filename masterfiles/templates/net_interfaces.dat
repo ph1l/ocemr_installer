@@ -2,9 +2,9 @@
 auto lo
 iface lo inet loopback
 
+auto $(base_config.net_dev)
 iface $(base_config.net_dev) inet static
 	address	$(base_config.net_addr)
 	netmask $(base_config.net_mask)
-
 [%CFEngine END %]
 

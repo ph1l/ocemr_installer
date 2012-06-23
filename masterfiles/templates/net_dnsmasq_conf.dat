@@ -1,0 +1,40 @@
+[%CFEngine BEGIN %]
+# Never forward plain names (without a dot or domain part)
+domain-needed
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+
+strict-order
+#no-resolv
+#no-poll
+
+# Add other name servers here, with domain specs if they are for
+# non-public domains.
+#server=/localnet/192.168.0.1
+#server=/3.168.192.in-addr.arpa/10.1.2.3
+local=/ocemr/
+
+interface=$(base_config.net_dev)
+
+#bind-interfaces
+#no-hosts
+#addn-hosts=/etc/banner_add_hosts
+expand-hosts
+
+# Set the domain for dnsmasq. this is optional, but if it is set, it
+# does the following things.
+# 1) Allows DHCP hosts to have fully qualified domain names, as long
+#     as the domain part matches this setting.
+# 2) Sets the "domain" DHCP option thereby potentially setting the
+#    domain of all systems configured by DHCP
+# 3) Provides the domain part for "expand-hosts"
+domain=ocemr
+dhcp-range=$(base_config.net_dhcp_min),$(base_config.net_dhcp_max),12h
+
+dhcp-option=42,0.0.0.0
+
+dhcp-authoritative
+
+no-negcache
+[%CFEngine END %]
+
