@@ -3,11 +3,14 @@
 
 # late_command.sh
 
+# Copy Packages to target
 mkdir -p /target/var/packages
 cp -r /hd-media/repo /target/var/packages/
 
-echo "deb file:///var/packages/ repo/" >> /target/etc/apt/sources.list
+# Copy cfengine policy to target
+mkdir -p /target/var/cfengine
+cp -rv /hd-media/masterfiles /target/var/cfengine/
 
-in-target aptitude --quiet --assume-yes update
-in-target aptitude --quiet --assume-yes install cfengine3
-
+# Setup first run script
+cp /target/etc/rc.local /target/etc/rc.local.orig
+cp /hd-media/preseed/rc.local.first /target/etc/rc.local

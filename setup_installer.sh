@@ -46,6 +46,7 @@ mkdir -p /tmp/$$.usb/repo
 cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
 ( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | gzip > repo/Packages.gz )
 
+cp -rv masterfiles /tmp/$$.usb/
 
 cp -v debian-${DEB_REL}-${ARCH}-CD-1.iso /tmp/$$.usb
 
