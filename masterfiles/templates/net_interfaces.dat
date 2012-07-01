@@ -6,5 +6,6 @@ auto $(base_config.net_dev)
 iface $(base_config.net_dev) inet static
 	address	$(base_config.net_addr)
 	netmask $(base_config.net_mask)
+	pre-up /sbin/iptables-restore /etc/network/firewall
 [%CFEngine END %]
 

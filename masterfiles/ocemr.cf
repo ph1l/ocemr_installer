@@ -1,0 +1,22 @@
+bundle agent ocemr
+{
+
+methods:
+		"any" usebundle => ocemr_database();
+
+}
+
+bundle agent ocemr_database
+{
+packages:
+		"mysql-server"
+			package_policy => "add",
+			package_method => generic,
+			classes => if_ok("ocemr_database_package_mysql_server");
+
+		"ocemr"
+			package_policy => "add",
+			package_method => generic,
+			classes => if_ok("ocemr_database_package_ocemr");
+
+}

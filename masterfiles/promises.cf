@@ -6,11 +6,13 @@
 
 body common control
 {
- bundlesequence => { "base" };
+ bundlesequence => { "base", "ocemr" };
 
  inputs => { 
             "cfengine_stdlib.cf",
-	    "base.cf"
+	    "library.cf",
+	    "base.cf",
+	    "ocemr.cf",
            };
 
  version => "OCEMR Promises.cf 1.0.0";

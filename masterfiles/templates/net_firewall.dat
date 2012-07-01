@@ -1,0 +1,19 @@
+[%CFEngine BEGIN %]
+###############################################################################
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A POSTROUTING -o ppp+ -j MASQUERADE
+COMMIT
+###############################################################################
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT ! -i ppp+ -m state --state NEW -j ACCEPT
+-A FORWARD -i ppp+ -o ppp+ -j REJECT --reject-with icmp-port-unreachable
+COMMIT
+###############################################################################
+[%CFEngine END %]

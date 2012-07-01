@@ -1,8 +1,6 @@
 #
 
-POLICY_FILES=base.cf cfengine_stdlib.cf promises.cf
-TEMPLATES=net_interfaces.dat net_hostname.dat net_mailname.dat net_hosts.dat \
-	net_resolv_conf.dat net_dnsmasq_conf.dat
+POLICY_FILES=cfengine_stdlib.cf promises.cf library.cf base.cf ocemr.cf
 
 INPUTS_DIR=/var/lib/cfengine3/inputs
 
@@ -22,7 +20,7 @@ install: $(POLICY_FILES) $(addprefix templates/,$(TEMPLATES))
 	  $(POLICY_FILES) $(INPUTS_DIR)
 	
 	install --owner=root --group=root --mode=644 \
-	  $(addprefix templates/,$(TEMPLATES)) $(INPUTS_DIR)/templates
+	  templates/*.dat $(INPUTS_DIR)/templates
 
 
 check: $(POLICY_FILES)
