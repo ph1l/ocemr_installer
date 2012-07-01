@@ -16,11 +16,18 @@ install: $(POLICY_FILES) $(addprefix templates/,$(TEMPLATES))
 	  mkdir -p $(INPUTS_DIR)/templates; \
 	  fi
 	
+	if [ ! -d $(INPUTS_DIR)/data ]; then \
+	  mkdir -p $(INPUTS_DIR)/data; \
+	  fi
+	
 	install --owner=root --group=root --mode=644 \
 	  $(POLICY_FILES) $(INPUTS_DIR)
 	
 	install --owner=root --group=root --mode=644 \
 	  templates/*.dat $(INPUTS_DIR)/templates
+
+	install --owner=root --group=root --mode=644 \
+	  data/* $(INPUTS_DIR)/data
 
 
 check: $(POLICY_FILES)

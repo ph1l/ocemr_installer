@@ -1,22 +1,83 @@
+bundle common ocemr_config
+{
+ vars:
+	"db_name" string => "ocemr";
+	"db_user" string => "ocemr";
+	"db_host" string => "localhost";
+	"db_pass" string => "rmeco";
+	"admin_name" string => "Administrator";
+	"admin_email" string => "admin@$(base_config.net_domain)";
+	"timezone" string => "Etc/UTC";
+	"secret_key" string => "5!&)hu8!_=l-*y2gwm9z9z&qro+m7%wswqpzk1)hlt_nxi)k_x";
+	"ocemr_superuser" string => "admin";
+	"ocemr_superuser_email" string => "ocemr@ocemr.$(base_config.net_domain)";
+	"ocemr_superuser_password" string => "";
+}
+
 bundle agent ocemr
 {
 
-methods:
-		"any" usebundle => ocemr_database();
+classes:
 
-}
+	ocemr_package_mysql_server::
+		"ocemr_database_checked" expression => "any";
+		"ocemr_database_exists" expression =>
+			fileexists("/var/lib/mysql/$(ocemr_config.db_name)");
 
-bundle agent ocemr_database
-{
 packages:
+
 		"mysql-server"
 			package_policy => "add",
 			package_method => generic,
-			classes => if_ok("ocemr_database_package_mysql_server");
+			classes => if_ok("ocemr_package_mysql_server");
 
 		"ocemr"
 			package_policy => "add",
 			package_method => generic,
-			classes => if_ok("ocemr_database_package_ocemr");
+			classes => if_ok("ocemr_package_ocemr");
+
+methods:
+
+	ocemr_package_ocemr::
+
+		"any" usebundle => insert_template(
+			"/etc/ocemr/settings.py", "ocemr_settings_py" );
+
+		"any" usebundle => insert_template(
+			"/etc/ocemr/util_conf.py", "ocemr_util_conf_py" );
+
+		"any" usebundle => insert_template(
+			"/etc/ocemr/apache2.conf", "ocemr_apache2_conf" );
+
+	ocemr__etc_apache2_sites_enabled_ocemr_repaired::
+
+		"any" usebundle => restart_service("apache2");
+
+files:
+
+	ocemr_package_ocemr::
+
+		"/etc/apache2/sites-enabled/ocemr"
+			link_from => ln_s("/etc/apache2/sites-available/ocemr"),
+			classes => if_repaired("ocemr__etc_apache2_sites_enabled_ocemr_repaired");
+
+commands:
+
+	ocemr_package_mysql_server.ocemr_package_ocemr.ocemr_database_checked.!ocemr_database_exists::
+
+		"/usr/bin/mysqladmin -uroot create $(ocemr_config.db_name)"
+			contain => in_shell;
+
+		"/bin/echo \"GRANT ALL ON $(ocemr_config.db_name).* TO $(ocemr_config.db_user)@$(ocemr_config.db_host) IDENTIFIED BY \\\"$(ocemr_config.db_pass)\\\";\" | /usr/bin/mysql -uroot"
+			contain => in_shell;
+
+		"/usr/bin/mysqladmin -uroot reload"
+			contain => in_shell;
+
+		"/usr/bin/python /usr/share/ocemr/apps/ocemr/manage.py syncdb --noinput"
+			contain => setuid_sh("www-data");
+
+		"/usr/bin/python /usr/share/ocemr/apps/ocemr/manage.py loaddata $(sys.workdir)/inputs/data/default_user.json"
+			contain => setuid_sh("www-data");
 
 }
