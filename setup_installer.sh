@@ -7,6 +7,7 @@ CODENAME="squeeze"
 
 if [ -z "${2}" ]; then
 	echo "Usage: ${0} <DEVICE> <ARCH>"
+	exit 2
 fi
 
 USB_DEV=${1}
