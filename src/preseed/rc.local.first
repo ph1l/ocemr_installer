@@ -1,9 +1,14 @@
 #!/bin/sh
 
-dpkg -i /var/packages/repo/cfengine3_3.3.3-2_i386.deb 
+dpkg -i /var/packages/repo/tcl8.4_*.deb /var/packages/repo/tcl_*.deb
+dpkg -i /var/packages/repo/usb-modeswitch_*.deb /var/packages/repo/usb-modeswitch-data_*.deb
+dpkg -i /var/packages/repo/watch4inet_*.deb
+
+dpkg -i /var/packages/repo/cfengine3_*.deb
 
 ( cd /var/cfengine/masterfiles; make check install )
 
 /usr/sbin/cf-agent -I
 
+mv /etc/rc.local /etc/rc.local.first
 mv /etc/rc.local.orig /etc/rc.local
