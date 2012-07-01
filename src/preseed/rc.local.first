@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Kremlor Package Archive Keyring ( for OCEMR )
+
+dpkg -i /var/packages/repo/kremlor-archive-keyring_*.deb
+
 dpkg -i /var/packages/repo/tcl8.4_*.deb /var/packages/repo/tcl_*.deb
 dpkg -i /var/packages/repo/usb-modeswitch_*.deb /var/packages/repo/usb-modeswitch-data_*.deb
 dpkg -i /var/packages/repo/watch4inet_*.deb
