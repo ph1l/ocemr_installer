@@ -16,8 +16,21 @@ bundle agent base
 {
 
 methods:
+		"any" usebundle => base_cfengine3();
 		"any" usebundle => base_networking();
 		"any" usebundle => base_apt();
+
+}
+
+bundle agent base_cfengine3
+{
+methods:
+
+		"any" usebundle => insert_template(
+			"/etc/default/cfengine3", "cfengine3_default");
+
+	insert_template__etc_default_cfengine3_repaired::
+		"any" usebundle => restart_service("cfengine3");
 
 }
 

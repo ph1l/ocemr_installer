@@ -178,7 +178,7 @@ schedule => { "Min00", "Min05", "Min10", "Min15", "Min20",
 # cf-twin needs its own safe environment because of the update mechanism
 
  linux::
-  exec_command => "$(sys.cf_twin) -f failsafe.cf && $(sys.cf_agent)";
+  exec_command => "$(sys.cf_agent)";
 
 }
 
