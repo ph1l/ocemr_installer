@@ -18,8 +18,16 @@ bundle agent ocemr
 {
 
 classes:
-
-	ocemr_package_mysql_server::
+		"apache2_installed"
+			expression => fileexists(
+				"/usr/sbin/apache2");
+		"ocemr_installed"
+			expression => fileexists(
+				"/usr/share/ocemr/apps/ocemr/__init__.py");
+		"mysql_server_installed"
+			expression => fileexists(
+				"/usr/sbin/mysqld");
+	mysql_server_installed::
 		"ocemr_database_checked" expression => "any";
 		"ocemr_database_exists" expression =>
 			fileexists("/var/lib/mysql/$(ocemr_config.db_name)");
@@ -28,17 +36,15 @@ packages:
 
 		"mysql-server"
 			package_policy => "add",
-			package_method => generic,
-			classes => if_ok("ocemr_package_mysql_server");
+			package_method => generic;
 
 		"ocemr"
 			package_policy => "add",
-			package_method => generic,
-			classes => if_ok("ocemr_package_ocemr");
+			package_method => generic;
 
 methods:
 
-	ocemr_package_ocemr::
+	ocemr_installed::
 
 		"any" usebundle => insert_template(
 			"/etc/ocemr/settings.py", "ocemr_settings_py" );
@@ -49,13 +55,17 @@ methods:
 		"any" usebundle => insert_template(
 			"/etc/ocemr/apache2.conf", "ocemr_apache2_conf" );
 
-	ocemr__etc_apache2_sites_enabled_ocemr_repaired::
+	ocemr__etc_apache2_sites_enabled_ocemr_repaired|ocemr_apache_not_running::
 
 		"any" usebundle => restart_service("apache2");
 
+	ocemr_mysqld_not_running::
+
+		"any" usebundle => restart_service("mysql");
+
 files:
 
-	ocemr_package_ocemr::
+	ocemr_installed::
 
 		"/etc/apache2/sites-enabled/ocemr"
 			link_from => ln_s("/etc/apache2/sites-available/ocemr"),
@@ -63,7 +73,7 @@ files:
 
 commands:
 
-	ocemr_package_mysql_server.ocemr_package_ocemr.ocemr_database_checked.!ocemr_database_exists::
+	mysql_server_installed.ocemr_installed.ocemr_database_checked.!ocemr_database_exists::
 
 		"/usr/bin/mysqladmin -uroot create $(ocemr_config.db_name)"
 			contain => in_shell;
@@ -80,4 +90,11 @@ commands:
 		"/usr/bin/python /usr/share/ocemr/apps/ocemr/manage.py loaddata $(sys.workdir)/inputs/data/default_user.json"
 			contain => setuid_sh("www-data");
 
+processes:
+	apache2_installed::
+		"/usr/sbin/apache2"
+			restart_class => "ocemr_apache_not_running";
+	mysql_server_installed::
+		"/usr/bin/mysqld_safe"
+			restart_class => "ocemr_mysqld_not_running";
 }

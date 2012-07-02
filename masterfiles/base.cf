@@ -43,11 +43,14 @@ methods:
 
 bundle agent base_networking
 {
+classes:
+		"base_networking_package_dnsmasq" expression => fileexists(
+			"/usr/sbin/dnsmasq");
+
 packages:
 		"dnsmasq"
 			package_policy => "add",
-			package_method => generic,
-			classes => if_ok("base_networking_package_dnsmasq");
+			package_method => generic;
 			
 methods:
 		"any" usebundle => insert_template(
