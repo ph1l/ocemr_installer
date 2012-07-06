@@ -6,11 +6,11 @@ commands:
 		"/sbin/ifup $(iface_name)";
 }
 
-bundle agent restart_service(s)
+bundle agent service(s,command)
 {
 commands:
 	debian::
-		"/usr/sbin/invoke-rc.d $(s) restart";
+		"/usr/sbin/invoke-rc.d $(s) $(command)";
 }
 
 bundle agent insert_template(dst, src)

@@ -6,6 +6,7 @@ bundle common base_config
 	"net_dev" string => "eth0";
 	"net_addr" string => "192.168.7.2";
 	"net_mask" string => "255.255.255.0";
+	"net_gateway" string => "192.168.7.1";
 	"net_dns1" string => "8.8.4.4";
 	"net_dns2" string => "8.8.8.8";
 	"net_dhcp_min" string => "192.168.7.101";
@@ -30,7 +31,7 @@ methods:
 			"/etc/default/cfengine3", "cfengine3_default");
 
 	insert_template__etc_default_cfengine3_repaired::
-		"any" usebundle => restart_service("cfengine3");
+		"any" usebundle => service("cfengine3", "restart");
 
 }
 
@@ -44,20 +45,30 @@ methods:
 bundle agent base_networking
 {
 classes:
-		"base_networking_package_dnsmasq" expression => fileexists(
+		"am_gateway"
+			expression => strcmp("$(base_config.net_gateway)","");
+		"package_dnsmasq" expression => fileexists(
 			"/usr/sbin/dnsmasq");
 
 packages:
+	am_gateway::
 		"dnsmasq"
-			package_policy => "add",
+			package_policy => "addupdate",
+			package_method => generic;
+
+	package_dnsmasq.!am_gateway::
+		"dnsmasq"
+			package_policy => "delete",
 			package_method => generic;
 			
+processes:
+	am_gateway.package_dnsmasq::
+		"/usr/sbin/dnsmasq"
+			restart_class => "dnsmasq_not_running";
+
 methods:
 		"any" usebundle => insert_template(
 			"/etc/network/interfaces", "net_interfaces" );
-
-		"any" usebundle => insert_template(
-			"/etc/network/firewall", "net_firewall" );
 
 		"any" usebundle => insert_template(
 			"/etc/hostname", "net_hostname" );
@@ -70,8 +81,14 @@ methods:
 
 		"any" usebundle => insert_template(
 			"/etc/resolv.conf", "net_resolv_conf");
+	am_gateway::
+		"any" usebundle => insert_template(
+			"/etc/network/firewall", "net_firewall" );
 
-	base_networking_package_dnsmasq::
+		"any" usebundle => insert_template(
+			"/etc/sysctl.d/ip_forward", "sysctl_d_ip_forward" );
+
+	am_gateway.package_dnsmasq::
 
 		"any" usebundle => insert_template(
 			"/etc/dnsmasq.conf", "net_dnsmasq_conf");
@@ -80,7 +97,18 @@ methods:
 
 		"any" usebundle => restart_interface("$(base_config.net_dev)");
 
-	insert_template__etc_dnsmasq_conf_repaired::
+	am_gateway.insert_template__etc_dnsmasq_conf_repaired::
 
-		"any" usebundle => restart_service("dnsmasq");
+		"any" usebundle => service("dnsmasq", "reload");
+
+	am_gateway.package_dnsmasq.dnsmasq_not_running::
+
+		"any" usebundle => service("dnsmasq", "start");
+
+commands:
+
+	am_gateway.insert_template__etc_sysctl_d_ip_forward_repaired::
+
+		"/sbin/sysctl -p /etc/sysctl.d/ip_forward";
+
 }

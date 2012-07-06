@@ -55,13 +55,17 @@ methods:
 		"any" usebundle => insert_template(
 			"/etc/ocemr/apache2.conf", "ocemr_apache2_conf" );
 
-	ocemr__etc_apache2_sites_enabled_ocemr_repaired|ocemr_apache_not_running::
+	ocemr__etc_apache2_sites_enabled_ocemr_repaired::
 
-		"any" usebundle => restart_service("apache2");
+		"any" usebundle => service("apache2", "force-reload");
+
+	ocemr_apache_not_running::
+
+		"any" usebundle => service("apache2", "start");
 
 	ocemr_mysqld_not_running::
 
-		"any" usebundle => restart_service("mysql");
+		"any" usebundle => service("mysql", "start");
 
 files:
 
