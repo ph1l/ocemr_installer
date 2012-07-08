@@ -5,14 +5,14 @@
 DEB_REL="6.0.5"
 CODENAME="squeeze"
 
-if [ -z "${2}" ]; then
-	echo "Usage: ${0} <DEVICE> <ARCH>"
+if [ -z "${1}" ]; then
+	echo "Usage: ${0} <DEVICE>"
 	exit 2
 fi
 
 USB_DEV=${1}
 
-ARCH=${2}
+ARCH=i386
 
 ISO_URL_BASE=http://cdimage.debian.org/debian-cd/${DEB_REL}/${ARCH}/iso-cd
 ISO_FILENAME=debian-${DEB_REL}-${ARCH}-CD-1.iso
@@ -46,8 +46,6 @@ cp -r src/preseed /tmp/$$.usb/
 mkdir -p /tmp/$$.usb/repo
 cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
 ( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | gzip > repo/Packages.gz )
-
-cp -rv masterfiles /tmp/$$.usb/
 
 cp -v debian-${DEB_REL}-${ARCH}-CD-1.iso /tmp/$$.usb
 
