@@ -2,7 +2,7 @@
 #
 #
 
-DEB_REL="6.0.5"
+DEB_REL="6.0.6"
 CODENAME="squeeze"
 
 if [ -z "${1}" ]; then
