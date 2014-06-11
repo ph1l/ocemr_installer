@@ -2,8 +2,9 @@
 #
 #
 
-DEB_REL="6.0.6"
+DEB_REL="6.0.9"
 CODENAME="squeeze"
+ISO_TYPE="CD-1"
 
 if [ -z "${1}" ]; then
 	echo "Usage: ${0} <DEVICE>"
@@ -14,9 +15,9 @@ USB_DEV=${1}
 
 ARCH=i386
 
-ISO_URL_BASE=http://cdimage.debian.org/debian-cd/${DEB_REL}/${ARCH}/iso-cd
-ISO_FILENAME=debian-${DEB_REL}-${ARCH}-CD-1.iso
-if [ ! -e debian-${DEB_REL}-${ARCH}-CD-1.iso ]; then
+ISO_URL_BASE=http://cdimage.debian.org/cdimage/archive/${DEB_REL}/${ARCH}/iso-cd
+ISO_FILENAME=debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso
+if [ ! -e debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso ]; then
 	wget ${ISO_URL_BASE}/${ISO_FILENAME}
 fi
 
@@ -47,7 +48,7 @@ mkdir -p /tmp/$$.usb/repo
 cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
 ( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | gzip > repo/Packages.gz )
 
-cp -v debian-${DEB_REL}-${ARCH}-CD-1.iso /tmp/$$.usb
+cp -v debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso /tmp/$$.usb
 
 umount /tmp/$$.usb
 
