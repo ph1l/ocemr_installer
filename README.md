@@ -1,29 +1,36 @@
-ocemr_installer
-===============
+# ocemr_installer
 
-Using the Installer
--------------------
+ocemr_installer installs and configures Debian Squeeze, an appliance app for
+configuring the server, and the OCEMR application from a created USB installer
+memory stick.
 
-= Create (or find) your USB Installer disk.
+WARNING: this usb stick will automatically wipe the OS on the machine it
+runs on. You just have to press enter once! Be careful.
 
-= Bootstrap your system
+## Create your USB Installer disk.
 
-== Introduction to Installation
+    ~/code/ocemr_installer$ sudo ./setup_installer.sh <USB_DEVICE>
 
-=== Important Notes
+## Install the server
 
-=== Process
+#### Introduction to Installation
+
+###### Important Notes
+
+###### Process
 
   * boot off your USB Installer disk
   * the debain installer will run unattended and shut the system down when it's complete.
   * Remove the Installer Disk, and boot the system, it will shut itself down again.
   * Boot the system a third time and watch the console for completion status.
 
-== Troubleshooting the automatic setup.
+#### Troubleshooting the automatic setup.
 
-= Setting up the appliance
+TODO
 
-== Configure the printer
+## Setting up the appliance
+
+#### Configure the printer
 
   * Connect your printer
 
@@ -32,9 +39,3 @@ Using the Installer
 Use the CUPS web site @ https://192.168.7.2:631/ to setup your printer
 
   * Set the printer up in the appliance
-
-== OCEMR-Appliance Configuration
-
-== 
-
-
