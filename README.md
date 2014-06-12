@@ -1,41 +1,62 @@
 # ocemr_installer
 
-ocemr_installer installs and configures Debian Squeeze, an appliance app for
-configuring the server, and the OCEMR application from a created USB installer
-memory stick.
+ocemr_installer is a bootable USB disk image that can setup an OCEMR server
+appliance system. It installs and configures Debian Squeeze, an appliance app
+for configuring the server, and the OCEMR application from a created USB
+installer memory stick.
 
 WARNING: this usb stick will automatically wipe the OS on the machine it
 runs on. You just have to press enter once! Be careful.
 
-## Create your USB Installer disk.
+#### Obtain a USB Image
 
-    ~/code/ocemr_installer$ sudo ./setup_installer.sh <USB_DEVICE>
+###### Build your own
 
-## Install the server
+    $ ./setup_installer.sh <IMAGE_FILE>
 
-#### Introduction to Installation
+Note: this will require sudo installed and authenticated to run. It runs many
+commands as root.
 
-###### Important Notes
+###### Find a pre-built image
 
-###### Process
+Check the Wiki for USB Images: https://github.com/ph1l/ocemr_installer/wiki#images
 
-  * boot off your USB Installer disk
-  * the debain installer will run unattended and shut the system down when it's complete.
-  * Remove the Installer Disk, and boot the system, it will shut itself down again.
+#### Write the image to a device
+
+    # dd if=ocemr_installer-1.4.1b0.img of=/dev/USB_DEVICE
+
+where USB_DEVICE is whatever device name your system has assigned the
+USB stick. WARNING: be careful during this step, you risk harming your
+if you pass the wrong argument to dd.
+
+#### Install the server
+
+During the entine installation process the server will require an Internet
+connection to complete successfully.
+
+##### Phase One
+
+  * Boot a suitable server device from your newly creates USB stick.
+  * Select the automated installer option from the grub menu.
+  * the debain installer will run unattended and shut the system down when it's complete with the first phase
+
+##### Phase Two
+
+  * Remove the USB stick and boot the system again
+  * The system will come online and configure itself
+  * When it is complete, it will shut the system off
+
+##### Phase Three
   * Boot the system a third time and watch the console for completion status.
 
-#### Troubleshooting the automatic setup.
+##### Troubleshooting the automatic setup.
 
 TODO
 
-## Setting up the appliance
+#### Setting up the appliance
 
-#### Configure the printer
+After the installation is complete, you can login to the server as *user*: _ocemr_,
+with *password*: _admin_.
 
-  * Connect your printer
-
-  * Configure your printer
-
-Use the CUPS web site @ https://192.168.7.2:631/ to setup your printer
-
-  * Set the printer up in the appliance
+There is a server control panel at http://_ServerAddress_:5000/ that allows you
+to configure server and ocemr settings.
