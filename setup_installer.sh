@@ -28,7 +28,7 @@ fi
 
 IMAGE_FILE=${1}
 
-if [ ! -e debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso ]; then
+if [ ! -e ${ISO_FILENAME} ]; then
 	wget ${ISO_URL_BASE}/${ISO_FILENAME}
 fi
 
@@ -59,7 +59,7 @@ sudo mkdir -p /tmp/$$.usb/repo
 sudo cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
 ( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | sudo tee repo/Packages && sudo gzip repo/Packages )
 
-sudo cp -v debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso /tmp/$$.usb
+sudo cp -v ${ISO_FILENAME} /tmp/$$.usb
 
 # cleanup
 sudo umount /tmp/$$.usb
