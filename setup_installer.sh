@@ -5,21 +5,22 @@
 #### CONFIG SECTION #####
 
 ISO_TYPE="netinst"			# type of debian installer ISO (netinst, CD-1, etc..)
-IMG_SIZE=$(( 256 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024M
+IMG_SIZE=$(( 384 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024M
 
 # following options untested if changed:
 
-CODENAME="squeeze"			# release codename
-DEB_REL="6.0.9"				# release version
+CODENAME="jessie"			# release codename
+DEB_REL="testing"				# release version
 ARCH="i386"				# architecture
+
+ISO_URL_BASE=http://cdimage.debian.org/cdimage/jessie_di_alpha_1/${ARCH}/iso-cd
+ISO_FILENAME=debian-jessie-DI-a1-${ARCH}-${ISO_TYPE}.iso
+INSTALLER_BASE_URL=http://ftp.debian.org/debian/dists/${CODENAME}/main/installer-${ARCH}/current/images/hd-media/
 
 ## END CONFIG SECTION ###
 
 
 
-ISO_URL_BASE=http://cdimage.debian.org/cdimage/archive/${DEB_REL}/${ARCH}/iso-cd
-ISO_FILENAME=debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso
-INSTALLER_BASE_URL=http://ftp.debian.org/debian/dists/${CODENAME}/main/installer-${ARCH}/current/images/hd-media/
 
 if [ -z "${1}" ]; then
 	echo "Usage: ${0} <FILE>"
@@ -56,7 +57,7 @@ sudo wget -O /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/initrd.gz ${INSTALL
 sudo cp -r src/preseed /tmp/$$.usb/
 
 sudo mkdir -p /tmp/$$.usb/repo
-sudo cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
+sudo cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/ || true #ignore this error
 ( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | sudo tee repo/Packages && sudo gzip repo/Packages )
 
 sudo cp -v ${ISO_FILENAME} /tmp/$$.usb
