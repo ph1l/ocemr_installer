@@ -1,23 +1,5 @@
 #!/bin/sh
 
-# Kremlor Package Archive Keyring ( for OCEMR )
-
-dpkg -i /var/packages/repo/kremlor-archive-keyring_*.deb
-
-# Watch4inet ( to commect over cell-modem )
-
-dpkg -i /var/packages/repo/tcl8.4_*.deb /var/packages/repo/tcl_*.deb
-dpkg -i /var/packages/repo/usb-modeswitch_*.deb /var/packages/repo/usb-modeswitch-data_*.deb
-dpkg -i /var/packages/repo/watch4inet_*.deb
-
-# CFEngine
-
-dpkg -i /var/packages/repo/cfengine3_*.deb
-
-# Appliance packages
-
-dpkg -i /var/packages/repo/ocemr-appliance_*.deb
-
 # Run cfengine...
 
 /usr/sbin/cf-agent -IKf /var/cfengine/masterfiles/failsafe.cf
@@ -30,10 +12,10 @@ sleep 2
 sleep 2
 /usr/sbin/cf-agent -IK
 
-mv /etc/rc.local /etc/rc.local.first
-mv /etc/rc.local.orig /etc/rc.local
+#mv /etc/rc.local /etc/rc.local.first
+#mv /etc/rc.local.orig /etc/rc.local
 
-sleep 10
-echo HALT
-/sbin/halt
+#sleep 10
+#echo HALT
+#/sbin/halt
 

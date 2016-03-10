@@ -4,8 +4,8 @@
 
 #### CONFIG SECTION #####
 
-ISO_TYPE="netinst"			# type of debian installer ISO (netinst, CD-1, etc..)
-IMG_SIZE=$(( 256 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024M
+ISO_TYPE="CD-1"			# type of debian installer ISO (netinst, CD-1, etc..)
+IMG_SIZE=$(( 768 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024M
 
 # following options untested if changed:
 
