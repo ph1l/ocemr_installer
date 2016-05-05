@@ -17,6 +17,7 @@ dpkg -i /var/packages/repo/cfengine3_*.deb
 # Appliance packages
 
 dpkg -i /var/packages/repo/ocemr-appliance_*.deb
+dpkg -i /var/packages/repo/ocemr-appd_*.deb
 
 # Run cfengine...
 

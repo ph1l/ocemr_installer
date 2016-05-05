@@ -10,7 +10,7 @@ IMG_SIZE=$(( 256 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024
 # following options untested if changed:
 
 CODENAME="squeeze"			# release codename
-DEB_REL="6.0.9"				# release version
+DEB_REL="6.0.10"			# release version
 ARCH="i386"				# architecture
 
 ## END CONFIG SECTION ###
@@ -19,7 +19,7 @@ ARCH="i386"				# architecture
 
 ISO_URL_BASE=http://cdimage.debian.org/cdimage/archive/${DEB_REL}/${ARCH}/iso-cd
 ISO_FILENAME=debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso
-INSTALLER_BASE_URL=http://ftp.debian.org/debian/dists/${CODENAME}/main/installer-${ARCH}/current/images/hd-media/
+INSTALLER_BASE_URL=http://archive.debian.org/debian/dists/${CODENAME}/main/installer-${ARCH}/current/images/hd-media/
 
 if [ -z "${1}" ]; then
 	echo "Usage: ${0} <FILE>"
