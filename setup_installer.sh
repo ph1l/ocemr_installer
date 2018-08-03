@@ -5,21 +5,20 @@
 #### CONFIG SECTION #####
 
 ISO_TYPE="netinst"			# type of debian installer ISO (netinst, CD-1, etc..)
-IMG_SIZE=$(( 256 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024M
+IMG_SIZE=$(( 400 * 1024 * 1024 ))	# for netinst set to 512M for CD-1 set to 1024M
 
 # following options untested if changed:
 
-CODENAME="squeeze"			# release codename
-DEB_REL="6.0.10"			# release version
-ARCH="i386"				# architecture
+CODENAME="buster"			# release codename
+DI_CODENAME="buster-DI-alpha3"			# release codename
+DEB_REL="buster_di_alpha3"			# release version
+ARCH="amd64"				# architecture
 
 ## END CONFIG SECTION ###
 
-
-
-ISO_URL_BASE=http://cdimage.debian.org/cdimage/archive/${DEB_REL}/${ARCH}/iso-cd
-ISO_FILENAME=debian-${DEB_REL}-${ARCH}-${ISO_TYPE}.iso
-INSTALLER_BASE_URL=http://archive.debian.org/debian/dists/${CODENAME}/main/installer-${ARCH}/current/images/hd-media/
+ISO_URL_BASE=http://cdimage.debian.org/cdimage/${DEB_REL}/${ARCH}/iso-cd
+ISO_FILENAME=debian-${DI_CODENAME}-${ARCH}-${ISO_TYPE}.iso
+INSTALLER_BASE_URL=http://ftp.us.debian.org/debian/dists/${CODENAME}/main/installer-${ARCH}/current/images/hd-media/
 
 if [ -z "${1}" ]; then
 	echo "Usage: ${0} <FILE>"
@@ -30,6 +29,19 @@ IMAGE_FILE=${1}
 
 if [ ! -e ${ISO_FILENAME} ]; then
 	wget ${ISO_URL_BASE}/${ISO_FILENAME}
+fi
+if [ ! -e vmlinuz ]; then
+	wget ${INSTALLER_BASE_URL}/vmlinuz
+fi
+if [ ! -e initrd.gz ]; then
+	wget ${INSTALLER_BASE_URL}/initrd.gz
+fi
+if [ ! -d ansible ]; then
+	git clone https://github.com/patfreeman/ocemr_ansible.git ansible
+else
+	cd ansible
+	git pull
+	cd ..
 fi
 
 dd if=/dev/zero of=${IMAGE_FILE} seek=${IMG_SIZE} count=1k bs=1
@@ -50,14 +62,14 @@ sudo grub-install --root-directory=/tmp/$$.usb --modules="ext2 part_msdos" ${LOO
 cat src/grub.cfg | sed -e "s/@@ARCH@@/${ARCH}/g" -e "s/@@DEB_REL@@/${DEB_REL}/g"| sudo tee /tmp/$$.usb/boot/grub/grub.cfg
 
 sudo mkdir -p /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}
-sudo wget -O /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/vmlinuz ${INSTALLER_BASE_URL}/vmlinuz
-sudo wget -O /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/initrd.gz ${INSTALLER_BASE_URL}/initrd.gz
+sudo cp vmlinuz /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/vmlinuz
+sudo cp initrd.gz /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/initrd.gz
 
 sudo cp -r src/preseed /tmp/$$.usb/
 
-sudo mkdir -p /tmp/$$.usb/repo
-sudo cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
-( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | sudo tee repo/Packages && sudo gzip repo/Packages )
+sudo mkdir -p /tmp/$$.usb/ansible
+sudo cp -va ansible/ /tmp/$$.usb/ansible/ocemr/
+sudo cp -va ocemr.yml /tmp/$$.usb/ansible/
 
 sudo cp -v ${ISO_FILENAME} /tmp/$$.usb
 
