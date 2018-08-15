@@ -56,7 +56,7 @@ sudo wget -O /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/initrd.gz ${INSTALL
 sudo cp -r src/preseed /tmp/$$.usb/
 
 sudo mkdir -p /tmp/$$.usb/repo
-sudo cp -v repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
+sudo cp -v repo/*.asc repo/*_all.deb repo/*_${ARCH}.deb /tmp/$$.usb/repo/
 ( cd /tmp/$$.usb; dpkg-scanpackages repo/ /dev/null | sudo tee repo/Packages && sudo gzip repo/Packages )
 
 sudo cp -v ${ISO_FILENAME} /tmp/$$.usb

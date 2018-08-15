@@ -1,12 +1,11 @@
 #!/bin/sh
 
-# Kremlor Package Archive Keyring ( for OCEMR )
+# Add public key for elektron@halo.nu to apt keyring
 
-dpkg -i /var/packages/repo/kremlor-archive-keyring_*.deb
+apt-key add /var/packages/repo/2697143F.asc
 
-# Watch4inet ( to commect over cell-modem )
+# Watch4inet ( to connect over cell-modem )
 
-dpkg -i /var/packages/repo/tcl8.4_*.deb /var/packages/repo/tcl_*.deb
 dpkg -i /var/packages/repo/usb-modeswitch_*.deb /var/packages/repo/usb-modeswitch-data_*.deb
 dpkg -i /var/packages/repo/watch4inet_*.deb
 
@@ -18,6 +17,15 @@ dpkg -i /var/packages/repo/cfengine3_*.deb
 
 dpkg -i /var/packages/repo/ocemr-appliance_*.deb
 dpkg -i /var/packages/repo/ocemr-appd_*.deb
+
+cat > /etc/apt/sources.list << EOF
+deb http://archive.debian.org/debian/ squeeze main
+deb http://archive.debian.org/debian/ squeeze-lts main
+deb http://www.halo.nu/ocemr/debian/ squeeze main
+EOF
+
+apt-get update
+apt-get -f install
 
 # Run cfengine...
 
