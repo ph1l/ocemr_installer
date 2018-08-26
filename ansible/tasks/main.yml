@@ -1,0 +1,17 @@
+---
+# tasks file for ocemr
+- apt_key:
+    url: http://e2r4.com/repo/signing.key
+    state: present
+
+- apt_repository:
+    repo: deb http://e2r4.com/repo {{ ansible_lsb.codename }} main
+    state: present
+    filename: ocemr
+
+- name: Install ocemr-appd
+  apt:
+    pkg: ocemr-appd
+    state: present
+    update_cache: true
+  when: app_server

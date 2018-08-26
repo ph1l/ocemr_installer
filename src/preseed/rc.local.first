@@ -2,6 +2,10 @@
 
 # Run ansible
 cd /root/ansible/
+# install appd
 ansible-playbook ./ocemr.yml
+cp ./ocemr.yml /etc/ocemr-appliance/ansible/
+# install everything
+ansible-playbook -M /etc/ocemr-appliance/ansible /etc/ocemr-appliance/ansible/ocemr.yml
 
 mv /etc/rc.local /etc/rc.local.first

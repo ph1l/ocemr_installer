@@ -1,0 +1,6 @@
+galaxy_info:
+  author: Pat Freeman
+  description: OCEMR Role
+  min_ansible_version: 1.2
+  galaxy_tags: []
+dependencies: []

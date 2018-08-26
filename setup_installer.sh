@@ -36,13 +36,6 @@ fi
 if [ ! -e initrd.gz ]; then
 	wget ${INSTALLER_BASE_URL}/initrd.gz
 fi
-if [ ! -d ocemr-appliance ]; then
-	git clone -b ansible https://github.com/patfreeman/ocemr-appliance.git
-else
-	cd ocemr-appliance
-	git pull
-	cd ..
-fi
 
 dd if=/dev/zero of=${IMAGE_FILE} seek=${IMG_SIZE} count=1k bs=1
 
@@ -68,7 +61,7 @@ sudo cp initrd.gz /tmp/$$.usb/debian-installer-${DEB_REL}-${ARCH}/initrd.gz
 sudo cp -r src/preseed /tmp/$$.usb/
 
 sudo mkdir -p /tmp/$$.usb/ansible
-sudo cp -va ocemr-appliance/ansible/ /tmp/$$.usb/ansible/ocemr/
+sudo cp -va ansible/ /tmp/$$.usb/ansible/ocemr/
 sudo cp -va ocemr.yml /tmp/$$.usb/ansible/
 
 sudo cp -v ${ISO_FILENAME} /tmp/$$.usb
