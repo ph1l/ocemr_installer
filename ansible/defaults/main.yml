@@ -1,0 +1,11 @@
+---
+# defaults file for ocemr
+db_user: ocemr
+db_password: ocemr
+db_host:
+db_port:
+db_admin_password: changeme
+debug: False
+server_email: ocemr@server.com
+printer_name: Some_CUPS_Printer
+timezone: America/Chicago

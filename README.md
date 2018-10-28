@@ -10,6 +10,16 @@ runs on. You just have to press enter once! Be careful.
 
 #### Obtain a USB Image
 
+###### Configure your server
+
+    $ vi ocemr.yml
+
+Note: This is the ansible configuration file. See [ocemr_ansible](https://github.com/patfreeman/ocemr_ansible) for more information.
+
+    $ vi src/preseed/ocemr_installer.cfg
+
+Note: Choose one of the three disk configuration options. Make sure only one is uncommented. If none of the three options wirk for your needs, remove the disk-\*.cfg from uncommented include line and manually configure the disk when prompted during the install.
+
 ###### Build your own
 
     $ ./setup_installer.sh <IMAGE_FILE>
@@ -23,7 +33,7 @@ Check the Wiki for USB Images: https://github.com/ph1l/ocemr_installer/wiki#imag
 
 #### Write the image to a device
 
-    # dd if=ocemr_installer-1.4.1b0.img of=/dev/USB_DEVICE
+    # dd if=<IMAGE_FILE> of=/dev/<USB_DEVICE>
 
 where USB_DEVICE is whatever device name your system has assigned the
 USB stick. WARNING: be careful during this step, you risk harming your
@@ -38,16 +48,12 @@ connection to complete successfully.
 
   * Boot a suitable server device from your newly creates USB stick.
   * Select the automated installer option from the grub menu.
-  * the debain installer will run unattended and shut the system down when it's complete with the first phase
+  * the debian installer will run unattended and shut the system down when it's complete with the first phase
 
 ##### Phase Two
 
   * Remove the USB stick and boot the system again
   * The system will come online and configure itself
-  * When it is complete, it will shut the system off
-
-##### Phase Three
-  * Boot the system a third time and watch the console for completion status.
 
 ##### Troubleshooting the automatic setup.
 

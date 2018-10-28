@@ -1,12 +1,13 @@
 #!/bin/sh -ex 
-#
-
 # late_command.sh
 
-# Copy Packages to target
-mkdir -p /target/var/packages
-cp -r /hd-media/repo /target/var/packages/
+# Fix grub's root device definition for 4.17
+# Reinstalling pulls in more dependencies and probably fixes it
+in-target apt-get purge -y `chroot /target dpkg -l | grep linux-image-4.18 | cut -d" " -f3`
+in-target apt-get install -y linux-image-amd64
 
 # Setup first run script
-cp /target/etc/rc.local /target/etc/rc.local.orig
 cp /hd-media/preseed/rc.local.first /target/etc/rc.local
+
+# Install configurator
+cp -a /hd-media/ansible /target/root/ansible

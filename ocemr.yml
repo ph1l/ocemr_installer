@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  roles:
+          - ocemr
+  vars:
+          - app_server: true
+          - database_server: true
+          - db_admin_password: asdf
+          - ocemr_debug: False
