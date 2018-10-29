@@ -45,7 +45,7 @@ sudo parted -s ${LOOP_DEV} mklabel msdos
 sudo parted -s ${LOOP_DEV} mkpart primary ext2 1048576B $(( ${IMG_SIZE} - 1024 ))B
 sudo parted -s ${LOOP_DEV} set 1 boot on
 sudo partx -a ${LOOP_DEV} || true
-sudo mke2fs ${LOOP_DEV}p1
+sudo mke2fs -F ${LOOP_DEV}p1
 
 mkdir -p /tmp/$$.usb
 
